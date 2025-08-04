@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.arch</groupId>
-	<artifactId>ms-ecommerce</artifactId>
+	<artifactId>ms-inventory</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-ecommerce</name>
-	<description>Ms Ecommerce project for Spring Boot</description>
+	<name>ms-inventory</name>
+	<description>Ms Inventory project for Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
