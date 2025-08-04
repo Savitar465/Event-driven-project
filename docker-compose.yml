@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ms-payment-postgres
+    environment:
+      POSTGRES_DB: ms_payment
+      POSTGRES_USER: payment_user
+      POSTGRES_PASSWORD: payment_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - payment-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payment_user -d ms_payment"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: ms-payment-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: payment_user
+      RABBITMQ_DEFAULT_PASS: payment_password
+      RABBITMQ_DEFAULT_VHOST: /payment
+    ports:
+      - "5672:5672"    # AMQP port
+      - "15672:15672"  # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
